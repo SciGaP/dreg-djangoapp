@@ -11,5 +11,7 @@ setuptools.setup(
     entry_points="""
 [airavata.djangoapp]
 dreg_djangoapp = dreg_djangoapp.apps:DregDjangoappConfig
+[airavata.output_view_providers]
+dreg-genome-browser = dreg_djangoapp.output_views:DregGenomeBrowserViewProvider
 """,
 )
