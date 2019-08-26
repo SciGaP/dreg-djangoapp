@@ -8,7 +8,7 @@ class DregGenomeBrowserViewProvider:
     # locally
     # fixture_output_file = ""
 
-    def generate_data(self, experiment_output, experiment, output_file=None):
+    def generate_data(self, request, experiment_output, experiment, output_file=None):
         return {
             'output': render_to_string(
                 'dreg_djangoapp/dreg_genome_browser.html')
