@@ -56,10 +56,10 @@ class DregGenomeBrowserViewProvider:
 
         gbURL = "http://epigenomegateway.wustl.edu/browser/?datahub=" + \
                         http_protocol + "://" + request.META['HTTP_HOST'] +\
-                        "/api/gbrowser/?filelist=" + encoded_filelist + "&genome="
+                        "/dreg/gbrowser/?filelist=" + encoded_filelist + "&genome="
 
         return {
             'output': render_to_string(
                 'dreg_djangoapp/dreg_genome_browser.html'),
-            'js': '<script>alert("hello")</script>'
-        }
+            'js': "console.log('It was passed from the outputprovider')"
+            }
