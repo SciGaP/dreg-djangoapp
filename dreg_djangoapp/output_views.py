@@ -23,6 +23,8 @@ class DregGenomeBrowserViewProvider:
         data_root = settings.GATEWAY_DATA_STORE_DIR
         #data_root = "/var/www/portals/gateway-user-data/cornelldna/"
 
+        #remove data root from the path so that gbfile and gbrowser views can
+        #read the data root from settings
         if exp_data_dir.startswith(data_root):
             exp_data_dir = exp_data_dir.replace(data_root, "", 1)
 
@@ -37,9 +39,7 @@ class DregGenomeBrowserViewProvider:
                     for rp in data_product_model.replicaLocations:
                         if rp.replicaLocationCategory == ReplicaLocationCategory.GATEWAY_DATA_STORE:
                             current_ouput_path = rp.filePath
-                            #print("*********",current_ouput_path)
                             path = urlparse(current_ouput_path).path.replace(data_root+exp_data_dir,"",1).replace('/',"",1)
-                            #print("*********", path)
                             break
 
                     filelist = filelist + path + "\n"
@@ -57,9 +57,9 @@ class DregGenomeBrowserViewProvider:
         gbURL = "http://epigenomegateway.wustl.edu/browser/?datahub=" + \
                         http_protocol + "://" + request.META['HTTP_HOST'] +\
                         "/dreg/gbrowser/?filelist=" + encoded_filelist + "&genome="
-
+        js = 'alert("Js is executed")';
         return {
             'output': render_to_string(
-                'dreg_djangoapp/dreg_genome_browser.html'),
-            'js': "console.log('It was passed from the outputprovider')"
+                'dreg_djangoapp/dreg_genome_browser.html', {'gbURL' : gbURL}),
+            'js': js
             }

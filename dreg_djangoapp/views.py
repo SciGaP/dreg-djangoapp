@@ -27,7 +27,7 @@ def gbrowser_dreg(request):
         decoded_filelist = base64.b64decode(filelist).decode(text_format).split("\n")
         out_prefix = decoded_filelist[3]
         filelist_encoded = list()
-
+        print(decoded_filelist)
         # input file 1
         content['type']= "bigwig"
         encoded_file = base64.b64encode(bytes(decoded_filelist[0] + decoded_filelist[1], text_format)).decode(text_format)
@@ -79,18 +79,17 @@ def gbrowser_dreg(request):
 def gbfile_download(request):
     #TODO: decode filenames and path from the url text
     text_format = 'utf-8'
+    file_path = ""
     if 'file' in request.GET:
         file = request.GET['file']
         decoded_filepath = base64.b64decode(file).decode(text_format)
-        #print(decoded_filepath)
         filename = os.path.basename(decoded_filepath)
-        #print(filename)
-        #data_root = settings.GATEWAY_DATA_STORE_DIR
+        data_root = settings.GATEWAY_DATA_STORE_DIR
+        # Change this to test it locally
         #data_root = "/var/www/portals/gateway-user-data/cornelldna/"
-        data_root = settings.MEDIA_ROOT + '/dreg/'
+        #data_root = settings.MEDIA_ROOT + '/dreg/'
         file_path = os.path.join(data_root, decoded_filepath)
-        #print(file_path)
-    #file_path = os.path.join(settings.MEDIA_ROOT, "images/xsede.original.png")
+
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/force-download")
