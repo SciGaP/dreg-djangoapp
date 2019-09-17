@@ -61,5 +61,5 @@ class DregGenomeBrowserViewProvider:
         return {
             'output': render_to_string(
                 'dreg_djangoapp/dreg_genome_browser.html', {'gbURL' : gbURL}),
-            'js': js
+            'js': "/static/dreg/gbrowser.js"
             }
