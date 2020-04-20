@@ -1,6 +1,7 @@
 import base64
 import os
 import json
+import re
 
 from django.shortcuts import render
 from django.http import Http404, HttpResponse
@@ -11,12 +12,12 @@ def hello_world(request):
     return render(request, "dynamic_djangoapp/hello.html")
 
 
-def gbrowser_dreg(request):
+def gbrowser_dreg(request, filelist):
     print("Dreg view is called....")
 
     #Check if the list of file is included in the request
-    if 'filelist' in request.GET:
-        filelist = request.GET['filelist']
+    if filelist:
+        #filelist = request.GET['filelist']
         data_root = settings.GATEWAY_DATA_STORE_DIR
         #data_root = "/var/www/portals/gateway-user-data/cornelldna/"
         http_protocol = request.scheme
@@ -72,8 +73,9 @@ def gbrowser_dreg(request):
         print(json_data)
 
         dump = json.dumps(json_data)
+        dump_cleaned = re.sub(r'"(\w*?)": ', r'\1:', dump)
         #print(dump)
-    return HttpResponse(dump, content_type='text/plain')
+    return HttpResponse(dump_cleaned, content_type='text/plain')
 
 
 def gbfile_download(request):
@@ -88,11 +90,11 @@ def gbfile_download(request):
         # Change this to test it locally
         #data_root = "/var/www/portals/gateway-user-data/cornelldna/"
         #data_root = settings.MEDIA_ROOT + '/dreg/'
-        file_path = os.path.join(data_root, decoded_filepath)
+        file_path = os.path.join(data_root, decoded_filepath.lstrip("/"))
 
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type="application/force-download")
-            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            response = HttpResponse(fh.read(), content_type="application/octet-stream")
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
             return response
     raise Http404
